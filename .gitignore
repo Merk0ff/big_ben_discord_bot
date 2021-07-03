@@ -2,3 +2,4 @@
 venv/
 audio_out/
 bot.db
+bot.log
