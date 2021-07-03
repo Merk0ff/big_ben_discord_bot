@@ -72,6 +72,13 @@ class Music(commands.Cog):
         self.__active_voice_client = []
 
     @commands.command()
+    async def test(self, ctx):
+        channel = ctx.author.voice.channel
+        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('./audio_out/100.mp3'))
+        voice_client = await channel.connect()
+        voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
+
+    @commands.command()
     async def unsubscribe(self, ctx):
         channel_id = ctx.author.voice.channel.id
         guild_id = ctx.guild.id
