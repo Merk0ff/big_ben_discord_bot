@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from discord.ext import commands
@@ -5,7 +6,8 @@ from discord.ext import commands
 from discord_bot import Music
 from big_ben_sampler import BigBanSampler
 
-token = 'ODYwOTI3ODEyMTgxNDI2MTg2.YOCXgQ.uzCm_8Reu1uJkLFAO1y2WmMy83Y'
+
+token = os.environ.get('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("!!"),
                    description='Relatively simple music bot example')
