@@ -33,7 +33,7 @@ class Music(commands.Cog):
 
         self.sched = AsyncIOScheduler()
         self.sched.add_job(self.big_boy, 'cron', minute='*/15')
-        self.sched.add_job(self.big_boy_leave, 'cron', minute='*/17')
+        self.sched.add_job(self.big_boy_leave, 'cron', minute='*/1')
         self.sched.start()
 
     @commands.command()
@@ -66,10 +66,15 @@ class Music(commands.Cog):
             self.__active_voice_client.append(voice_client)
 
     async def big_boy_leave(self):
-        for i in self.__active_voice_client:
-            await i.disconnect(force=True)
+        out = []
 
-        self.__active_voice_client = []
+        for i in self.__active_voice_client:
+            if not i.is_playing():
+                await i.disconnect(force=True)
+            else:
+                out.append(i)
+
+        self.__active_voice_client = out
 
     @commands.command()
     async def test(self, ctx):
@@ -77,6 +82,7 @@ class Music(commands.Cog):
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('./audio_out/100.mp3'))
         voice_client = await channel.connect()
         voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
+        self.__active_voice_client.append(voice_client)
 
     @commands.command()
     async def unsubscribe(self, ctx):

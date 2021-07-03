@@ -18,7 +18,7 @@ class BigBanSampler:
 
         self.__bells = {}
 
-        for hour in range(1, 12):
+        for hour in range(1, 13):
             for k, v in chime.items():
                 output = BytesIO()
                 sound = v + bell * hour
