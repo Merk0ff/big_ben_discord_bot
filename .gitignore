@@ -1,2 +1,4 @@
 .idea/
 venv/
+audio_out/
+bot.db

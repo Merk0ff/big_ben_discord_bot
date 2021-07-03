@@ -1,1 +1,1 @@
-from sampler import BigBanSampler
+from .sampler import BigBanSampler
