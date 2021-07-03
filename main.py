@@ -7,7 +7,7 @@ from big_ben_sampler import BigBanSampler
 
 token = 'ODYwOTI3ODEyMTgxNDI2MTg2.YOCXgQ.uzCm_8Reu1uJkLFAO1y2WmMy83Y'
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("="),
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!!"),
                    description='Relatively simple music bot example')
 
 
