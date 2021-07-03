@@ -9,8 +9,13 @@ from discord.errors import ClientException
 
 from datetime import datetime
 
-
-logging.basicConfig(filename="bot.log", level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler("bot.log"),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 
 
