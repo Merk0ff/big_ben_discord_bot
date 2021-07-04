@@ -1,3 +1,4 @@
+import re
 import logging
 
 import discord
@@ -7,7 +8,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext import commands
 from discord.errors import ClientException
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 logging.basicConfig(
     level=logging.INFO,
@@ -49,12 +50,18 @@ class Music(commands.Cog):
         else:
             await ctx.send('You already subscribed, unsubscribe first')
 
-    async def big_boy(self):
-        time = datetime.now().strftime('%-I%M')
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(f'./audio_out/{time}.mp3'))
+    async def get_time(self, channel_id):
+        if tz := self.db.get(f'{channel_id}_tz'):
+            tzinfo = timezone(timedelta(hours=tz))
+            return datetime.now(tzinfo).strftime('%-I%M')
 
+        return datetime.now().strftime('%-I%M')
+
+    async def big_boy(self):
         for i in self.db.lgetall('channels'):
             channel = self.bot.get_channel(i)
+            time = await self.get_time(i)
+            source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(f'./audio_out/{time}.mp3'))
             try:
                 voice_client = await channel.connect()
             except ClientException:
@@ -83,6 +90,18 @@ class Music(commands.Cog):
         voice_client = await channel.connect()
         voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
         self.__active_voice_client.append(voice_client)
+
+    @commands.command()
+    async def set_tz(self, ctx, arg):
+        match = re.match(r'[+-](?:[1-9]|[1][0-2])\b', arg)
+
+        if match:
+            channel_id = ctx.author.voice.channel.id
+            self.db.set(f'{channel_id}_tz', int(match[0]))
+            await ctx.send(f'TZ successfully set to {match[0]}')
+        else:
+            await ctx.send(f'IDK about this TZ: {arg}')
+
 
     @commands.command()
     async def unsubscribe(self, ctx):
