@@ -37,7 +37,10 @@ class Music(commands.Cog):
         self.sched.add_job(self.big_boy_leave, 'cron', minute='*/1')
         self.sched.start()
 
-    @commands.command()
+    @commands.command(
+        help='Subscribe channel you are in',
+        brief='Subscribe channel you are in',
+    )
     async def subscribe(self, ctx):
         channel_id = ctx.author.voice.channel.id
         guild_id = ctx.guild.id
@@ -83,15 +86,11 @@ class Music(commands.Cog):
 
         self.__active_voice_client = out
 
-    @commands.command()
-    async def test(self, ctx):
-        channel = ctx.author.voice.channel
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio('./audio_out/100.mp3'))
-        voice_client = await channel.connect()
-        voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
-        self.__active_voice_client.append(voice_client)
-
-    @commands.command()
+    @commands.command(
+        help='Set timezone using + sign for UTC+ TZ is required',
+        brief='Set timezone',
+        usage='<-12 - +12>'
+    )
     async def set_tz(self, ctx, arg):
         match = re.match(r'[+-](?:[1-9]|[1][0-2])\b', arg)
 
@@ -102,8 +101,10 @@ class Music(commands.Cog):
         else:
             await ctx.send(f'IDK about this TZ: {arg}')
 
-
-    @commands.command()
+    @commands.command(
+        help='Unsubscribe channel',
+        brief='Unsubscribe channel',
+    )
     async def unsubscribe(self, ctx):
         channel_id = ctx.author.voice.channel.id
         guild_id = ctx.guild.id
