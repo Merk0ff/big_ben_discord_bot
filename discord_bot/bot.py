@@ -46,7 +46,7 @@ class Music(commands.Cog):
             await ctx.send('You should be in a voice channel')
             return
 
-        channel_id = ctx.author.voice.channel.id
+        channel_id = str(ctx.author.voice.channel.id)
         guild_id = ctx.guild.id
 
         if guild_id not in redis.lrange('guilds', 0, -1):
@@ -66,7 +66,7 @@ class Music(commands.Cog):
 
     async def big_boy(self):
         for i in redis.lrange('channels', 0, -1):
-            channel = self.bot.get_channel(i)
+            channel = self.bot.get_channel(int(i))
             time = await self.get_time(i)
             source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(f'./audio_out/{time}.mp3'))
             try:
