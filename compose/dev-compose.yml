@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: ../
+      target: backend
+    volumes:
+      - type: 'bind'
+        source: '../'
+        target: '/bigboy/'
+    command: 'sleep infinity'
+    environment:
+      REDIS_HOST: 'redis'
+      REDIS_PORT: '6379'
+      REDIS_DB: '0'
+
+    env_file:
+      - ../prod.env
+
+  redis:
+    restart: always
+    image: redis:alpine
+    expose:
+      - '6379'

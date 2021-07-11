@@ -2,3 +2,4 @@
 venv/
 bot.db
 bot.log
+prod.env
