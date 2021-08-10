@@ -59,7 +59,7 @@ class Music(commands.Cog):
 
     async def get_time(self, channel_id):
         if tz := redis.get(f'{channel_id}_tz'):
-            tzinfo = timezone(timedelta(hours=tz))
+            tzinfo = timezone(timedelta(hours=int(tz)))
             return datetime.now(tzinfo).strftime('%-I%M')
 
         return datetime.now().strftime('%-I%M')
